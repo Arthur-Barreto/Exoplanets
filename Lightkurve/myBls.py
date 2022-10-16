@@ -1,23 +1,11 @@
 import numpy as np
 
 def normaliza(vetor):
-    # calculando o desvio padrão
     dp = np.std(vetor)
-    # calculando a média
     media = np.mean(vetor)
-    # normalizando
     for i in range(len(vetor)):
         vetor[i] = (vetor[i] - media)/dp
     return vetor
-
-def deltaY(vetor):
-    lis = []
-    for i in range(len(vetor)-2):
-        yi = vetor[i]
-        yj = vetor[i+1]
-        delta = yj - yi
-        lis.append(delta)
-    return lis
 
 def linearRegressionCoeficient(dataX,dataY):
     mediaX = np.mean(dataX)
@@ -47,13 +35,14 @@ def bls(time,fluxo,error):
     start = 0
 
     for i in range(1,len(fluxo)):
-        smallList = fluxo[:i]
-        coef = linearRegressionCoeficient(time[:i],smallList)
+        smallList = fluxo[:i+1]
+        coef = linearRegressionCoeficient(time[:i+1],smallList)
         # ao calcular o coef da regresão linear, saberemos o comportamento da curva
         # se ela inclinar muito, temos uma região de transito
 
         # vamos testar para modulo maior que 0.5
-        if abs(coef) > 0.5:
+        # arctan(0.1) ~= 5.71059314
+        if abs(coef) > 0.1:
             oldCoef = coef
             start = i
 
