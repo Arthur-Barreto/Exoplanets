@@ -10,8 +10,8 @@ def normaliza(vetor):
 def linearRegressionCoeficient(dataX,dataY):
     mediaX = np.mean(dataX)
     mediaY = np.mean(dataY)
-    SSxx = np.sum(np.fromiter(((mediaX-x)**2 for x in  dataX),dtype=float))
-    SSxy = np.sum(np.fromiter(((mediaX-x)*(mediaY-y) for x,y in zip(dataX,dataY)),dtype=float))
+    SSxx = np.sum(np.fromiter(((mediaX-x)**2 for x in dataX), dtype=float))
+    SSxy = np.sum(np.fromiter(((mediaX-x)*(mediaY-y) for x,y in zip(dataX,dataY)), dtype=float))
     return SSxy/SSxx
 
 # função que calcula o BLS, dado o tempo e o fluxo
@@ -55,4 +55,4 @@ def bls(time,fluxo,error):
             lisPeriod.append(periodo)
             start = i
 
-    return np.max(lisPeriod)
+    return lisPeriod
