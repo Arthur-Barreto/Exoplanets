@@ -35,7 +35,7 @@ def bls(time,fluxo,error):
     start = 0
 
     for i in range(1,len(fluxo)):
-        smallList = fluxo[:i+1]
+        smallList = fluxo[start:i+1]
         coef = linearRegressionCoeficient(time[:i+1],smallList)
         # ao calcular o coef da regresão linear, saberemos o comportamento da curva
         # se ela inclinar muito, temos uma região de transito
@@ -44,15 +44,17 @@ def bls(time,fluxo,error):
         # arctan(0.1) ~= 5.71059314
         if abs(coef) > 0.1:
             oldCoef = coef
+            # como temos um transito, devemos atribuir o indice i a start
             start = i
 
         # se a diferença entre o coefiente antigo e o novo for maior que o erro permitido
         # temos o fim do transito, e o indice atual é o novo start 
-        if abs(oldCoef-coef) > error:
+        if oldCoef is not None and abs(oldCoef-coef) > error:
             # temos o indicativo do fim do transito, no caso será o i-1
             end = i-1
             periodo = time[end] - time[start]
             lisPeriod.append(periodo)
+            # atualizamos o valor do transito de start para seccionar a nova smallList
             start = i
 
     return lisPeriod
