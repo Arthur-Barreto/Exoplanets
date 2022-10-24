@@ -7,11 +7,12 @@ def normaliza(vetor):
         vetor[i] = (vetor[i] - media)/dp
     return vetor
 
-def weight(fluxErr,index):
-    soma = np.sum(np.fromiter((fluxErr[i]**(-2) for i in len(fluxErr)), dtype=float))
-    return fluxErr[index]**(-2)/soma
+# o peso é dado por uma parte comum, dado perto retorno abaixo
+# para poupar processo computacional iremos realizar o calculo somente uma vez
+def weightSoma(fluxErr):
+    return (np.sum(np.fromiter((fluxErr[i]**(-2) for i in len(fluxErr)), dtype=float)))**(-1)
 
-# o tempo relativo gasto na fase L é definido por L
+# o tempo relativo gasto na fase L é definido por r
 # o mesmo pode ser calculado como segue abaixo
 
 def rValue(i1,i2,weight):
@@ -43,9 +44,11 @@ def bls(time,fluxo,fluxoErr):
 
     lisWeight = []
     menorD = None
+    periodo = None
+    somaW = weightSoma(fluxoErr)
 
     for i1 in range(len(fluxo)):
-        wi = weight(fluxoErr,i1)
+        wi = somaW*(fluxoErr[i1]**(-2))
         lisWeight.append(wi)
 
         for i2 in range(len(fluxoErr)):
