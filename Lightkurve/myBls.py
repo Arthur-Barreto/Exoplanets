@@ -8,9 +8,10 @@ def normaliza(vetor):
     return vetor
 
 # o peso é dado por uma parte comum, dado perto retorno abaixo
-# para poupar processo computacional iremos realizar o calculo somente uma vez
+# para poupar processo computacional iremos realizar o calcul5o somente uma vez
+
 def weightSoma(fluxErr):
-    return (np.sum(np.fromiter((fluxErr[i]**(-2) for i in len(fluxErr)), dtype=float)))**(-1)
+    return (np.sum(np.fromiter((fluxErr[i]**(-2) for i in range(len(fluxErr))), dtype=float)))**(-1)
 
 # o tempo relativo gasto na fase L é definido por r
 # o mesmo pode ser calculado como segue abaixo
@@ -22,7 +23,7 @@ def sValue(i1,i2,weight,fluxo):
     return np.sum(np.fromiter((weight[i]*fluxo[i] for i in range(i1,i2)), dtype=float))
 
 def DValue(lisWeight,fluxo,r,s):
-    soma = np.sum(np.fromiter((lisWeight[i]*fluxo[i]**2 for i in range(len(fluxo))), dtype=float))
+    soma = np.sum(np.fromiter((lisWeight[i]*fluxo[i]**2 for i in range(len(lisWeight))), dtype=float))
     return (soma - (s**2)/(r*(1-r)))
 
 # função que calcula o BLS, dado o tempo e o fluxo
@@ -47,13 +48,16 @@ def bls(time,fluxo,fluxoErr):
     periodo = None
     somaW = weightSoma(fluxoErr)
 
-    for i1 in range(len(fluxo)):
-        wi = somaW*(fluxoErr[i1]**(-2))
-        lisWeight.append(wi)
+    for i1 in range(len(fluxo)-1):
+      wi = somaW*(fluxoErr[i1]**(-2))
+      lisWeight.append(wi)
 
-        for i2 in range(len(fluxoErr)):
+    for i1 in range(len(fluxo)-1):
+        for i2 in range(i1+1,len(fluxo)-1):
+            print(f"i1 {i1}, i2 = {i2}")
             r = rValue(i1,i2,lisWeight)
             s = sValue(i1,i2,lisWeight,fluxo)
+            print(f"Flux has {len(fluxo)} lenght")
             d = DValue(lisWeight,fluxo,r,s)
 
             if menorD is None:
