@@ -11,7 +11,7 @@ def normaliza(vetor):
 # para poupar processo computacional iremos realizar o calcul5o somente uma vez
 
 def weightSoma(fluxErr):
-    return (np.sum(np.fromiter((fluxErr[i]**(-2) for i in range(len(fluxErr))), dtype=float)))**(-1)
+    return np.power(np.sum(np.power(fluxErr,-2)),-1)
 
 # o tempo relativo gasto na fase L é definido por r
 # o mesmo pode ser calculado como segue abaixo
@@ -22,9 +22,14 @@ def rValue(i1,i2,weight):
 def sValue(i1,i2,weight,fluxo):
     return np.sum(np.fromiter((weight[i]*fluxo[i] for i in range(i1,i2)), dtype=float))
 
-def DValue(lisWeight,fluxo,r,s):
-    soma = np.sum(np.fromiter((lisWeight[i]*fluxo[i]**2 for i in range(len(lisWeight))), dtype=float))
-    return (soma - (s**2)/(r*(1-r)))
+def somaDvalue(lisWeight,fluxo):
+    return np.sum(np.multiply(lisWeight,np.power(fluxo,2)))
+
+# def dValue(soma,r,s):
+#     return (soma - (s**2)/(r*(1-r)))
+
+def dValue(somaD,r,s):
+    return np.subtract(somaD,np.divide(np.power(s,2),np.multiply(r,(1-r))))
 
 # função que calcula o BLS, dado o tempo e o fluxo
 #  x[i] = fluxo
@@ -34,7 +39,7 @@ def bls(time,fluxo,fluxoErr):
     # fluxo é o eixo x
     # fluxoErr é o eixo y
     # time e fluxo devem ter o mesmo tamanho
-    if len(time) != len(fluxo):
+    if (len(time) != len(fluxo)) or (len(time) != len(fluxoErr)):
         print("Erro: time e fluxo devem ter o mesmo tamanho")
         return -1
     # vamos verificar se a curva está normalizada, se não iremos normalizar
@@ -48,17 +53,22 @@ def bls(time,fluxo,fluxoErr):
     periodo = None
     somaW = weightSoma(fluxoErr)
 
-    for i1 in range(len(fluxo)-1):
-      wi = somaW*(fluxoErr[i1]**(-2))
-      lisWeight.append(wi)
+    for i1 in range(len(fluxo)):
+        wi = somaW*(fluxoErr[i1]**(-2))
+        lisWeight.append(wi)
 
-    for i1 in range(len(fluxo)-1):
-        for i2 in range(i1+1,len(fluxo)-1):
+    print(f'len lisWeight: {len(lisWeight)}')
+    print(f'len fluxo: {len(fluxo)}')
+
+    somaD = np.array(somaDvalue(lisWeight,fluxo))
+
+    for i1 in range(len(fluxo)):
+        for i2 in range(i1+1,len(fluxo)):
             print(f"i1 {i1}, i2 = {i2}")
             r = rValue(i1,i2,lisWeight)
             s = sValue(i1,i2,lisWeight,fluxo)
-            print(f"Flux has {len(fluxo)} lenght")
-            d = DValue(lisWeight,fluxo,r,s)
+            print(f"Flux has {len(fluxo)} length")
+            d = dValue(somaD,r,s)
 
             if menorD is None:
                 menorD = d
