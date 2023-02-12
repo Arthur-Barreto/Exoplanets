@@ -31,7 +31,7 @@ Pass out: (add less (s to power 2)) divide for (r times (1-r))
 EndFunction
 
 Function myBls
-    Pass in: lisTime, lisFLux,lisFLuxErr
+    Pass in: lisFLux,lisFLuxErr
     creat list somaW equals to weighSoma passing fluxErr
     creat empty list called wi
 
