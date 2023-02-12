@@ -1,0 +1,52 @@
+Function weighSoma 
+    Pass In: fluxErr
+    for each num do
+        add += num to power -2 
+    end
+    Pass out: add to power -1
+EndFunction 
+
+Function rValue
+    Pass in: i1,i2,lisWeightbetween
+    for i between i1 and i2 do
+        add += lisWeight[i]
+    end
+    Pass out: add
+EndFunction
+
+Function sValue
+    Pass in: i1,i2,lisWeight,lisFLux
+    for i between i1 and i2 do
+       add += lisWeight[i] times lisFLux[i] 
+    end 
+    Pass out: add
+EndFunction
+
+Function dValue
+Pass in: lisWeight,lisFLux,r,s
+for each i in range of lisWeight do
+    add += lisWeight times lisFLux to power 2
+end
+Pass out: (add less (s to power 2)) divide for (r times (1-r))
+EndFunction
+
+Function myBls
+    Pass in: lisTime, lisFLux,lisFLuxErr
+    creat list somaW equals to weighSoma passing fluxErr
+    creat empty list called wi
+
+    for each i in range os lisFLux do
+        wi append (somaW times (lisFLuxErr[i] to power -2))
+    end
+
+    for i1 in range of lisFLux do 
+        for i2 in range of lisFLux do 
+            r equals to rValue passing i1,i2 and lisWeight
+            s equals sValue passing i1,i2 and lisFLux
+            d equals dValue passing lisWeight,lisFLux,r and s
+
+            write on file the values of i1,i2 and d
+        end
+    end
+    Pass out: Nothing
+EndFunction
